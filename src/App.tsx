@@ -41,11 +41,14 @@ function AnswerSet({
 
       setSelectedIndex(index);
 
-      // Check whether the new selected answer correct
-      if (answerObj.correct) {
-        currentCorrect++;
-      } else {
-        currentCorrect--;
+      // Check if the answer is selected already
+      if (selectedIndex != index) {
+        // Check whether the new selected answer correct
+        if (answerObj.correct) {
+          currentCorrect++;
+        } else {
+          currentCorrect--;
+        }
       }
 
       setNumCorrect(currentCorrect);

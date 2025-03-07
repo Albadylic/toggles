@@ -8,6 +8,20 @@ Bug - A user can continuously click one correct answer and increment the total c
 
 This could be fixed by disabling changes if an answer is already selected.
 
+Yeah, that fixed it, see the outer if here:
+
+```ts
+// Check if the answer is selected already
+if (selectedIndex != index) {
+  // Check whether the new selected answer correct
+  if (answerObj.correct) {
+    currentCorrect++;
+  } else {
+    currentCorrect--;
+  }
+}
+```
+
 ---
 
 Change to how I moved the slider, original:
