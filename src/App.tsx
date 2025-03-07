@@ -34,17 +34,12 @@ function AnswerSet({
     defaults[setIndex]
   );
 
-  function handleChange(answerObj) {
+  function handleChange(answerObj, index) {
     // If all answers are correct, prevent further changes
     if (!outcome) {
-      let newIndex = selectedIndex + 1;
       let currentCorrect = numCorrect;
 
-      if (newIndex > answerArr.length - 1) {
-        newIndex = 0;
-      }
-
-      setSelectedIndex(newIndex);
+      setSelectedIndex(index);
 
       // Check whether the new selected answer correct
       if (answerObj.correct) {
@@ -63,9 +58,9 @@ function AnswerSet({
         if (index === selectedIndex) {
           return (
             <span
-              onClick={() => handleChange(answerObj)}
+              onClick={() => handleChange(answerObj, index)}
               key={`obj-${index}`}
-              className="border rounded-full p-4 text-center w-1/2"
+              className={`border rounded-full p-4 text-center w-1/${answerArr.length} cursor-pointer`}
             >
               <p>{answerObj.text}</p>
             </span>
@@ -73,8 +68,8 @@ function AnswerSet({
         } else {
           return (
             <span
-              onClick={() => handleChange(answerObj)}
-              className="p-4 text-center w-1/2"
+              onClick={() => handleChange(answerObj, index)}
+              className={`p-4 text-center w-1/${answerArr.length} cursor-pointer`}
               key={`obj-${index}`}
             >
               <p>{answerObj.text}</p>
