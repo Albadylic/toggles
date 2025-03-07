@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 
 const question = "An animal cell contains:";
@@ -23,21 +23,38 @@ const answers = [
 
 const defaults = [1, 1, 1, 0];
 
-function AnswerSet({ answerArr, setIndex }) {
+function AnswerSet({
+  answerArr,
+  setIndex,
+  numCorrect,
+  setNumCorrect,
+  outcome,
+}) {
   const [selectedIndex, setSelectedIndex] = useState<number>(
     defaults[setIndex]
   );
 
-  function moveSlider() {
-    let newIndex = selectedIndex + 1;
+  function handleChange(answerObj) {
+    // If all answers are correct, prevent further changes
+    if (!outcome) {
+      let newIndex = selectedIndex + 1;
+      let currentCorrect = numCorrect;
 
-    if (newIndex > answerArr.length - 1) {
-      newIndex = 0;
+      if (newIndex > answerArr.length - 1) {
+        newIndex = 0;
+      }
+
+      setSelectedIndex(newIndex);
+
+      // Check whether the new selected answer correct
+      if (answerObj.correct) {
+        currentCorrect++;
+      } else {
+        currentCorrect--;
+      }
+
+      setNumCorrect(currentCorrect);
     }
-
-    setSelectedIndex(newIndex);
-
-    // Check whether the new selected answer correct
   }
 
   return (
@@ -46,7 +63,7 @@ function AnswerSet({ answerArr, setIndex }) {
         if (index === selectedIndex) {
           return (
             <span
-              onClick={moveSlider}
+              onClick={() => handleChange(answerObj)}
               key={`obj-${index}`}
               className="border rounded-full p-4 text-center w-1/2"
             >
@@ -56,7 +73,7 @@ function AnswerSet({ answerArr, setIndex }) {
         } else {
           return (
             <span
-              onClick={moveSlider}
+              onClick={() => handleChange(answerObj)}
               className="p-4 text-center w-1/2"
               key={`obj-${index}`}
             >
@@ -70,7 +87,15 @@ function AnswerSet({ answerArr, setIndex }) {
 }
 
 function App() {
-  const [outcome, setOutcome] = useState(false);
+  const [outcome, setOutcome] = useState<boolean>(false);
+  const [numCorrect, setNumCorrect] = useState<number>(1);
+
+  useEffect(() => {
+    if (numCorrect === answers.length) {
+      setOutcome(true);
+    }
+  }, [numCorrect]);
+
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <h3 className="text-2xl m-4">{question}</h3>
@@ -80,6 +105,9 @@ function App() {
             <AnswerSet
               answerArr={answerArr}
               setIndex={index}
+              numCorrect={numCorrect}
+              setNumCorrect={setNumCorrect}
+              outcome={outcome}
               key={`pair-${index}`}
             />
           );
