@@ -21,19 +21,51 @@ const answers = [
   ],
 ];
 
-function Slider({ answerObj }) {
+const defaults = [1, 1, 1, 0];
+
+function AnswerSet({ answerArr, setIndex }) {
+  const [selectedIndex, setSelectedIndex] = useState<number>(
+    defaults[setIndex]
+  );
+
   function moveSlider() {
-    // Move slider overlay over the answer.
+    let newIndex = selectedIndex + 1;
+
+    if (newIndex > answerArr.length - 1) {
+      newIndex = 0;
+    }
+
+    setSelectedIndex(newIndex);
+
+    // Check whether the new selected answer correct
   }
 
-  // Run a counter to check how many true answers there are
-
-  console.log(answerObj);
-
   return (
-    <span onClick={moveSlider} className="p-4">
-      <p>{answerObj.text}</p>
-    </span>
+    <div className="flex justify-between border rounded-full m-2">
+      {answerArr.map((answerObj, index) => {
+        if (index === selectedIndex) {
+          return (
+            <span
+              onClick={moveSlider}
+              key={`obj-${index}`}
+              className="border rounded-full p-4 text-center w-1/2"
+            >
+              <p>{answerObj.text}</p>
+            </span>
+          );
+        } else {
+          return (
+            <span
+              onClick={moveSlider}
+              className="p-4 text-center w-1/2"
+              key={`obj-${index}`}
+            >
+              <p>{answerObj.text}</p>
+            </span>
+          );
+        }
+      })}
+    </div>
   );
 }
 
@@ -43,16 +75,13 @@ function App() {
     <div className="flex flex-col items-center justify-center h-screen">
       <h3 className="text-2xl m-4">{question}</h3>
       <div id="answers_container">
-        {answers.map((answerPair, index) => {
+        {answers.map((answerArr, index) => {
           return (
-            <div
+            <AnswerSet
+              answerArr={answerArr}
+              setIndex={index}
               key={`pair-${index}`}
-              className="flex justify-evenly p-2 border rounded-full m-2"
-            >
-              {answerPair.map((answerObj) => (
-                <Slider answerObj={answerObj} key={answerObj.text} />
-              ))}
-            </div>
+            />
           );
         })}
       </div>
