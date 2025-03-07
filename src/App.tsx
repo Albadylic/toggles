@@ -31,7 +31,7 @@ function Slider({ answerObj }) {
   console.log(answerObj);
 
   return (
-    <span onClick={moveSlider}>
+    <span onClick={moveSlider} className="p-4">
       <p>{answerObj.text}</p>
     </span>
   );
@@ -40,12 +40,15 @@ function Slider({ answerObj }) {
 function App() {
   const [outcome, setOutcome] = useState(false);
   return (
-    <div>
-      <h3>{question}</h3>
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h3 className="text-2xl m-4">{question}</h3>
       <div id="answers_container">
         {answers.map((answerPair, index) => {
           return (
-            <div key={`pair-${index}`}>
+            <div
+              key={`pair-${index}`}
+              className="flex justify-evenly p-2 border rounded-full m-2"
+            >
               {answerPair.map((answerObj) => (
                 <Slider answerObj={answerObj} key={answerObj.text} />
               ))}
@@ -53,7 +56,9 @@ function App() {
           );
         })}
       </div>
-      {outcome ? <p>The answer is correct</p> : <p>The answer is incorrect</p>}
+      <p className="text-xl m-4">
+        The answer is {outcome ? "correct" : " incorrect"}
+      </p>
     </div>
   );
 }
