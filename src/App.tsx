@@ -88,6 +88,14 @@ function App() {
   const [outcome, setOutcome] = useState<boolean>(false);
   const [numCorrect, setNumCorrect] = useState<number>(1);
 
+  const colourObject = {
+    "0": "none-correct",
+    "1": "some-correct",
+    "2": "some-correct",
+    "3": "some-correct",
+    "4": "all-correct",
+  };
+
   useEffect(() => {
     if (numCorrect === answers.length) {
       setOutcome(true);
@@ -95,7 +103,11 @@ function App() {
   }, [numCorrect]);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div
+      className={`flex flex-col items-center justify-center h-screen ${
+        colourObject[numCorrect.toString()]
+      }`}
+    >
       <h3 className="text-2xl m-4">{question}</h3>
       <div id="answers_container">
         {answers.map((answerArr, index) => {

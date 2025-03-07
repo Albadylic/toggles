@@ -14,3 +14,15 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.none-correct {
+  background: linear-gradient(#f6b868, #ee6b2d);
+}
+
+.some-correct {
+  background: linear-gradient(#f6ef68, #f6b868);
+}
+
+.all-correct {
+  background: linear-gradient(#76e0c2, #59cada);
+}
