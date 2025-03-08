@@ -40,7 +40,7 @@ function AnswerSet({
   useEffect(() => {
     function updateTranslation() {
       if (containerRef.current) {
-        setTranslationDist(containerRef.current.offsetWidth / 2);
+        setTranslationDist(containerRef.current.offsetWidth / answerArr.length);
       }
     }
     updateTranslation();
@@ -78,7 +78,7 @@ function AnswerSet({
     >
       <span
         id="overlay"
-        className={`border border-transparent rounded-full w-1/2 h-18 transition-transform duration-700 selected-bg absolute`}
+        className={`border border-transparent rounded-full ${width} h-18 transition-transform duration-700 selected-bg absolute z-10`}
         style={{
           transform:
             selectedIndex > 0
@@ -92,7 +92,7 @@ function AnswerSet({
             <span
               onClick={() => handleChange(answerObj, index)}
               key={`obj-${index}`}
-              className={`p-4 text-center ${width} cursor-pointer selected-text`}
+              className={`p-4 text-center ${width} cursor-pointer selected-text z-20`}
             >
               <p>{answerObj.text}</p>
             </span>
@@ -101,7 +101,7 @@ function AnswerSet({
           return (
             <span
               onClick={() => handleChange(answerObj, index)}
-              className={`p-4 text-center ${width} cursor-pointer`}
+              className={`p-4 text-center ${width} cursor-pointer z-20`}
               key={`obj-${index}`}
             >
               <p>{answerObj.text}</p>
