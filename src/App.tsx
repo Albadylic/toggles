@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./App.css";
 
 const question = "An animal cell contains:";
@@ -34,6 +34,20 @@ function AnswerSet({
     defaults[setIndex]
   );
 
+  const [translationDist, setTranslationDist] = useState(0);
+  const containerRef = useRef<HTMLDivElement | null>(null); // Reference to the container
+
+  useEffect(() => {
+    function updateTranslation() {
+      if (containerRef.current) {
+        setTranslationDist(containerRef.current.offsetWidth / 2);
+      }
+    }
+    updateTranslation();
+    window.addEventListener("resize", updateTranslation);
+    return () => window.removeEventListener("resize", updateTranslation);
+  }, []);
+
   const width = `w-1/${answerArr.length}`;
 
   function handleChange(answerObj, index) {
@@ -57,15 +71,20 @@ function AnswerSet({
     }
   }
 
-  function moveOverlay() {}
-
   return (
     <div
+      ref={containerRef}
       className={`flex relative items-center border rounded-full m-2 h-18 w-full`}
     >
       <span
         id="overlay"
         className={`border border-transparent rounded-full w-1/2 h-18 transition-transform duration-700 selected-bg absolute`}
+        style={{
+          transform:
+            selectedIndex > 0
+              ? `translateX(${translationDist}px)`
+              : `translateX(0)`,
+        }}
       ></span>
       {answerArr.map((answerObj, index) => {
         if (index === selectedIndex) {
