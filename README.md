@@ -47,9 +47,18 @@ The advantage is that the slider will move right to the chosen answer rather tha
 
 ---
 
+Building the slider:
+
+1. I drafted out an idea of the structure on tldraw
+1. I watched a couple videos on how other people had done similar things. Neither was exactly what I wanted but I was able to understand the principles they were using to then implement my own solution. [One was a light / dark toggle with no text inside. The other was a similar toggle with text tabs built in raw html,js and tailwind].
+1. The slider is an overlay which has position absolute and width is dynamically set based on how many answers there are. The same dynamic width is used on each answer element.
+1. I'm using a transform on an inline style to translateX based on a distance calculated referencing the container. -- I wonder if I could use a tailwind `translate-x-[${translationDist}px]` instead...
+1. I used useRef on the parent container to get its current width, within a useEffect which keeps the value up to date and responds to changes in the sizing of the window
+
+---
+
 Todo:
 
-- Transition animation
 - Responsive design for 320px screens
 - Random question order, random answer order (math.random in the subcomponent)
 - Next question & dynamic rendering for any object

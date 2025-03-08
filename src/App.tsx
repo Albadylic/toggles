@@ -46,7 +46,7 @@ function AnswerSet({
     updateTranslation();
     window.addEventListener("resize", updateTranslation);
     return () => window.removeEventListener("resize", updateTranslation);
-  }, []);
+  }, [answerArr.length]);
 
   const width = `w-1/${answerArr.length}`;
 
