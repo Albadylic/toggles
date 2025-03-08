@@ -26,3 +26,11 @@
 .all-correct {
   background: linear-gradient(#76e0c2, #59cada);
 }
+
+.selected-text {
+  color: #9f938b;
+}
+
+.selected-bg {
+  background-color: rgba(245, 245, 245, 0.5);
+}

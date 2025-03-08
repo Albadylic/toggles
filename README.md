@@ -44,3 +44,18 @@ setSelectedIndex(index);
 ```
 
 The advantage is that the slider will move right to the chosen answer rather than sequentially from left to right. Scalable UI for >2 answers.
+
+---
+
+Todo:
+
+- Transition animation
+- Responsive design for 320px screens
+- Random question order, random answer order (math.random in the subcomponent)
+- Next question & dynamic rendering for any object
+- Dynamic colours for any length of answer set
+- Fix types
+
+---
+
+A thought: the structure of the data assumes that only one answer will be marked as correct. This would be need to be validated elsewhere or allows for multiple correct answers.

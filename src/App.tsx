@@ -34,6 +34,8 @@ function AnswerSet({
     defaults[setIndex]
   );
 
+  const width = `w-1/${answerArr.length}`;
+
   function handleChange(answerObj, index) {
     // If all answers are correct, prevent further changes
     if (!outcome) {
@@ -55,15 +57,23 @@ function AnswerSet({
     }
   }
 
+  function moveOverlay() {}
+
   return (
-    <div className="flex justify-between border rounded-full m-2">
+    <div
+      className={`flex relative items-center border rounded-full m-2 h-18 w-full`}
+    >
+      <span
+        id="overlay"
+        className={`border border-transparent rounded-full w-1/2 h-18 transition-transform duration-700 selected-bg absolute`}
+      ></span>
       {answerArr.map((answerObj, index) => {
         if (index === selectedIndex) {
           return (
             <span
               onClick={() => handleChange(answerObj, index)}
               key={`obj-${index}`}
-              className={`border rounded-full p-4 text-center w-1/${answerArr.length} cursor-pointer`}
+              className={`p-4 text-center ${width} cursor-pointer selected-text`}
             >
               <p>{answerObj.text}</p>
             </span>
@@ -72,7 +82,7 @@ function AnswerSet({
           return (
             <span
               onClick={() => handleChange(answerObj, index)}
-              className={`p-4 text-center w-1/${answerArr.length} cursor-pointer`}
+              className={`p-4 text-center ${width} cursor-pointer`}
               key={`obj-${index}`}
             >
               <p>{answerObj.text}</p>
@@ -104,7 +114,7 @@ function App() {
 
   return (
     <div
-      className={`flex flex-col items-center justify-center h-screen ${
+      className={`flex flex-col items-center font-semibold justify-center h-screen ${
         colourObject[numCorrect.toString()]
       }`}
     >
