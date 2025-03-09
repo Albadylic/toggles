@@ -13,7 +13,6 @@ const answers = [
   ],
   [
     { text: "Partially permeable membrane", correct: true },
-    // { text: "short", correct: true },
     { text: "Impermeable membrane", correct: false },
   ],
   [
@@ -34,7 +33,8 @@ function AnswerSet({
   const [selectedIndex, setSelectedIndex] = useState<number>(
     defaults[setIndex]
   );
-  const [translationDist, setTranslationDist] = useState<string>("");
+  const [translationX, setTranslationX] = useState<string>("");
+  const [translationY, setTranslationY] = useState<string>("");
   const containerRef = useRef<HTMLDivElement | null>(null); // Reference to the container
 
   useEffect(() => {
@@ -45,25 +45,29 @@ function AnswerSet({
         // Or we get a TS error
         if (containerRef.current) {
           if (selectedIndex === 0) {
-            setTranslationDist(`translateX(0px)`);
+            setTranslationX(`translateX(0px)`);
+            setTranslationY(`translateY(0px)`);
           } else {
-            setTranslationDist(
+            setTranslationX(
               `translateX(${
                 containerRef.current.offsetWidth / answerArr.length
               }px)`
             );
+            setTranslationY(`translateY(0px)`);
           }
         }
       } else {
         if (containerRef.current) {
           if (selectedIndex === 0) {
-            setTranslationDist(`translateY(0px)`);
+            setTranslationY(`translateY(0px)`);
+            setTranslationX(`translateX(0px)`);
           } else {
-            setTranslationDist(
+            setTranslationY(
               `translateY(${
                 containerRef.current.offsetHeight / answerArr.length
               }px)`
             );
+            setTranslationX(`translateX(0px)`);
           }
         }
       }
@@ -107,7 +111,7 @@ function AnswerSet({
         id="overlay"
         className={`border border-transparent sm:rounded-full ${height} rounded-lg sm:h-18 w-2xs sm:${width} transition-transform duration-700 selected-bg absolute z-10`}
         style={{
-          transform: `${translationDist}`,
+          transform: `${translationX} ${translationY}`,
         }}
       ></span>
       {answerArr.map((answerObj, index) => {
