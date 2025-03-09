@@ -13,6 +13,7 @@ const answers = [
   ],
   [
     { text: "Partially permeable membrane", correct: true },
+    // { text: "short", correct: true },
     { text: "Impermeable membrane", correct: false },
   ],
   [
@@ -33,22 +34,48 @@ function AnswerSet({
   const [selectedIndex, setSelectedIndex] = useState<number>(
     defaults[setIndex]
   );
-
-  const [translationDist, setTranslationDist] = useState(0);
+  const [translationDist, setTranslationDist] = useState<string>("");
   const containerRef = useRef<HTMLDivElement | null>(null); // Reference to the container
 
   useEffect(() => {
     function updateTranslation() {
-      if (containerRef.current) {
-        setTranslationDist(containerRef.current.offsetWidth / answerArr.length);
+      // Larger screens use X-axis
+      if (window.innerWidth > 640) {
+        // We need to check if containerRef.current exists to perform the calculation
+        // Or we get a TS error
+        if (containerRef.current) {
+          if (selectedIndex === 0) {
+            setTranslationDist(`translateX(0px)`);
+          } else {
+            setTranslationDist(
+              `translateX(${
+                containerRef.current.offsetWidth / answerArr.length
+              }px)`
+            );
+          }
+        }
+      } else {
+        if (containerRef.current) {
+          if (selectedIndex === 0) {
+            setTranslationDist(`translateY(0px)`);
+          } else {
+            setTranslationDist(
+              `translateY(${
+                containerRef.current.offsetHeight / answerArr.length
+              }px)`
+            );
+          }
+        }
       }
     }
     updateTranslation();
+    // Listen for window resize
     window.addEventListener("resize", updateTranslation);
     return () => window.removeEventListener("resize", updateTranslation);
-  }, [answerArr.length]);
+  }, [answerArr.length, selectedIndex]);
 
   const width = `w-1/${answerArr.length}`;
+  const height = `h-1/${answerArr.length}`;
 
   function handleChange(answerObj, index) {
     // If all answers are correct, prevent further changes
@@ -74,16 +101,13 @@ function AnswerSet({
   return (
     <div
       ref={containerRef}
-      className={`flex relative items-center border rounded-full m-2 h-18 w-full`}
+      className={`flex sm:flex-row flex-col relative items-center border rounded-lg sm:rounded-full m-2 h-min sm:h-18 w-2xs sm:w-xl md:w-2xl text-sm sm:text-base`}
     >
       <span
         id="overlay"
-        className={`border border-transparent rounded-full ${width} h-18 transition-transform duration-700 selected-bg absolute z-10`}
+        className={`border border-transparent sm:rounded-full ${height} rounded-lg sm:h-18 w-2xs sm:${width} transition-transform duration-700 selected-bg absolute z-10`}
         style={{
-          transform:
-            selectedIndex > 0
-              ? `translateX(${translationDist}px)`
-              : `translateX(0)`,
+          transform: `${translationDist}`,
         }}
       ></span>
       {answerArr.map((answerObj, index) => {
@@ -92,7 +116,7 @@ function AnswerSet({
             <span
               onClick={() => handleChange(answerObj, index)}
               key={`obj-${index}`}
-              className={`p-4 text-center ${width} cursor-pointer selected-text z-20`}
+              className={`sm:p-4 text-center ${width} cursor-pointer selected-text z-20`}
             >
               <p>{answerObj.text}</p>
             </span>
@@ -101,7 +125,7 @@ function AnswerSet({
           return (
             <span
               onClick={() => handleChange(answerObj, index)}
-              className={`p-4 text-center ${width} cursor-pointer z-20`}
+              className={`sm:p-4 text-center ${width} cursor-pointer z-20`}
               key={`obj-${index}`}
             >
               <p>{answerObj.text}</p>
