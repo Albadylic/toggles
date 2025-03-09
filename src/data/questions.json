@@ -1,0 +1,68 @@
+[
+  {
+    "question": "An animal cell contains:",
+    "answers": [
+      [
+        { "text": "Cell wall", "correct": false },
+        { "text": "Ribosomes", "correct": true }
+      ],
+      [
+        { "text": "Cytoplasm", "correct": true },
+        { "text": "Chloroplast", "correct": false }
+      ],
+      [
+        { "text": "Partially permeable membrane", "correct": true },
+        { "text": "Impermeable membrane", "correct": false }
+      ],
+      [
+        { "text": "Cellulose", "correct": false },
+        { "text": "Mitochondira", "correct": true }
+      ]
+    ]
+  },
+  {
+    "question": "Which of the following are components of blood?",
+    "answers": [
+      [
+        { "text": "Red blood cells", "correct": true },
+        { "text": "Neurons", "correct": false }
+      ],
+      [
+        { "text": "Platelets", "correct": true },
+        { "text": "Alveoli", "correct": false }
+      ],
+      [
+        { "text": "White blood cells", "correct": true },
+        { "text": "Cartilage", "correct": false }
+      ],
+      [
+        { "text": "Plasma", "correct": true },
+        { "text": "Tendons", "correct": false }
+      ]
+    ]
+  },
+  {
+    "question": "Which of the following are characteristics of enzymes?",
+    "answers": [
+      [
+        { "text": "They speed up reactions", "correct": true },
+        { "text": "They slow down reactions", "correct": false }
+      ],
+      [
+        { "text": "They are specific to one substrate", "correct": true },
+        { "text": "They can react with any molecule", "correct": false }
+      ],
+      [
+        { "text": "They are affected by temperature and pH", "correct": true },
+        {
+          "text": "They are unaffected by external conditions",
+          "correct": false
+        }
+      ],
+      [
+        { "text": "They are proteins", "correct": true },
+        { "text": "They are lipids", "correct": false }
+      ]
+    ]
+  }
+]

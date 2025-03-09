@@ -1,41 +1,28 @@
 import { useState, useEffect, useRef } from "react";
 import "./App.css";
+import questions from "./data/questions.json";
 
-const question = "An animal cell contains:";
-const answers = [
-  [
-    { text: "Cell wall", correct: false },
-    { text: "Ribosomes", correct: true },
-  ],
-  [
-    { text: "Cytoplasm", correct: true },
-    { text: "Chloroplast", correct: false },
-  ],
-  [
-    { text: "Partially permeable membrane", correct: true },
-    { text: "Impermeable membrane", correct: false },
-  ],
-  [
-    { text: "Cellulose", correct: false },
-    { text: "Mitochondira", correct: true },
-  ],
-];
-
-const defaults = [1, 1, 1, 0];
-
-function AnswerSet({
-  answerArr,
-  setIndex,
-  numCorrect,
-  setNumCorrect,
-  outcome,
-}) {
-  const [selectedIndex, setSelectedIndex] = useState<number>(
-    defaults[setIndex]
-  );
-
+function AnswerSet({ answerArr, numCorrect, setNumCorrect, outcome }) {
+  const randomIndex = Math.floor(Math.random() * answerArr.length);
+  const [selectedIndex, setSelectedIndex] = useState<number>(randomIndex);
   const [translationDist, setTranslationDist] = useState(0);
-  const containerRef = useRef<HTMLDivElement | null>(null); // Reference to the container
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  const checkCorrect = (answerObj) => {
+    console.log("before", numCorrect);
+    if (answerObj.correct) {
+      setNumCorrect((prev: number) => prev + 1);
+    } else {
+      setNumCorrect((prev: number) => prev - 1);
+    }
+    console.log("after", numCorrect);
+  };
+
+  useEffect(() => {
+    setNumCorrect((prev: number) =>
+      answerArr[randomIndex].correct ? prev + 1 : prev - 1
+    );
+  }, []);
 
   useEffect(() => {
     function updateTranslation() {
@@ -53,21 +40,20 @@ function AnswerSet({
   function handleChange(answerObj, index) {
     // If all answers are correct, prevent further changes
     if (!outcome) {
-      let currentCorrect = numCorrect;
+      // let currentCorrect = numCorrect;
 
       setSelectedIndex(index);
 
-      // Check if the answer is selected already
-      if (selectedIndex != index) {
-        // Check whether the new selected answer correct
-        if (answerObj.correct) {
-          currentCorrect++;
-        } else {
-          currentCorrect--;
-        }
-      }
-
-      setNumCorrect(currentCorrect);
+      // // Check if the answer is selected already
+      // if (selectedIndex != index) {
+      //   // Check whether the new selected answer correct
+      //   // if (answerObj.correct) {
+      //   //   currentCorrect++;
+      //   // } else {
+      //   //   currentCorrect--;
+      //   // }
+      //   checkCorrect(answerObj);
+      // }
     }
   }
 
@@ -115,12 +101,13 @@ function AnswerSet({
 
 function App() {
   const [outcome, setOutcome] = useState<boolean>(false);
-  const [numCorrect, setNumCorrect] = useState<number>(1);
+  const [numCorrect, setNumCorrect] = useState<number>(0);
+  const [curQuestion, setCurQuestion] = useState<number>(0);
 
   const setColors = () => {
     if (numCorrect === 0) {
       return "none-correct";
-    } else if (numCorrect === answers.length) {
+    } else if (numCorrect === questions[curQuestion].answers.length) {
       return "all-correct";
     } else {
       return "some-correct";
@@ -128,22 +115,30 @@ function App() {
   };
 
   useEffect(() => {
-    if (numCorrect === answers.length) {
+    if (numCorrect === questions[curQuestion].answers.length) {
       setOutcome(true);
+    } else {
+      setOutcome(false);
     }
-  }, [numCorrect]);
+  }, [numCorrect, curQuestion]);
+
+  function handleNextQuestion() {
+    const index = curQuestion + 1;
+    setCurQuestion(index);
+    setOutcome(false);
+    setNumCorrect(0);
+  }
 
   return (
     <div
       className={`flex flex-col items-center font-semibold justify-center h-screen ${setColors()}`}
     >
-      <h3 className="text-2xl m-4">{question}</h3>
+      <h3 className="text-2xl m-4">{questions[curQuestion].question}</h3>
       <div id="answers_container">
-        {answers.map((answerArr, index) => {
+        {questions[curQuestion].answers.map((answerArr, index) => {
           return (
             <AnswerSet
               answerArr={answerArr}
-              setIndex={index}
               numCorrect={numCorrect}
               setNumCorrect={setNumCorrect}
               outcome={outcome}
@@ -155,6 +150,9 @@ function App() {
       <p className="text-xl m-4">
         The answer is {outcome ? "correct" : " incorrect"}
       </p>
+      {outcome ? (
+        <button onClick={handleNextQuestion}>Next question</button>
+      ) : null}
     </div>
   );
 }
