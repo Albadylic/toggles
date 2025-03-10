@@ -27,8 +27,8 @@ function App() {
   }, [numCorrect, curQuestion]);
 
   function handleNextQuestion() {
-    const index = curQuestion + 1;
-    setCurQuestion(index);
+    // const index = curQuestion + 1;
+    setCurQuestion((prev) => prev + 1);
     setOutcome(false);
     setNumCorrect(0);
   }
@@ -43,7 +43,7 @@ function App() {
           return (
             <AnswerSet
               answerArr={answerArr}
-              answerSetIndex={index}
+              curQuestion={curQuestion}
               numCorrect={numCorrect}
               setNumCorrect={setNumCorrect}
               outcome={outcome}

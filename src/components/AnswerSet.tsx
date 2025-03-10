@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 
 export default function AnswerSet({
   answerArr,
-  answerSetIndex,
+  curQuestion,
   numCorrect,
   setNumCorrect,
   outcome,
@@ -66,6 +66,12 @@ export default function AnswerSet({
   const width = `w-1/${answerArr.length}`;
   const height = `h-1/${answerArr.length}`;
 
+  // When the question changes, reset the count of correct
+  //   useEffect(() => {
+  //     initialCountCompleted.current = false;
+  //     setSelectedIndex(Math.floor(Math.random() * answerArr.length));
+  //   }, [curQuestion]);
+
   // Run initial count
   useEffect(() => {
     if (!initialCountCompleted.current) {
@@ -74,25 +80,16 @@ export default function AnswerSet({
       setNumCorrect((prev: number) => prev + (isCorrect ? 1 : 0));
       initialCountCompleted.current = true;
     }
-  }, []);
-
-  // Counting correct answers
-
-  //   useEffect(() => {
-  //     setNumCorrect((prev: number) => {
-  //       if (answerArr[randomIndex].correct) {
-  //         return prev + 1;
-  //       } else {
-  //         return prev;
-  //       }
-  //     });
-  //   }, [answerArr, randomIndex, setNumCorrect]);
+  });
 
   function handleChange(answerObj, index) {
     // If all answers are correct, prevent further changes
     if (!outcome) {
       setSelectedIndex(index);
 
+      // If the states don't match, then the 'correctness' has changed from true -> false or vice versa
+      // With two answers, this will always be true
+      // With >2 then an answer might change but remain incorrect
       if (answerObj.correct !== isCorrect) {
         setNumCorrect((prev: number) =>
           answerObj.correct ? prev + 1 : prev - 1
@@ -100,23 +97,6 @@ export default function AnswerSet({
       }
 
       setIsCorrect(answerObj.correct);
-
-      //   if (answerArr[selectedIndex].correct) {
-      //     console.log("Y");
-      //     setNumCorrect((prev: number) => {
-      //       return prev + 1;
-      //     });
-      //     setIsCorrect(true);
-      //   } else {
-      //     if (isCorrect) {
-      //       console.log("N1");
-      //       setNumCorrect((prev: number) => prev - 1);
-      //     } else {
-      //       console.log("N2");
-      //       setNumCorrect((prev: number) => prev);
-      //     }
-      //     setIsCorrect(false);
-      //   }
     }
   }
   useEffect(() => {
