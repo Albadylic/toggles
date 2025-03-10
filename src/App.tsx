@@ -23,15 +23,22 @@ const createQuestionOrder = () => {
 const questionOrder: number[] = createQuestionOrder();
 
 function App() {
-  const [outcome, setOutcome] = useState<boolean>(false);
-  const [numCorrect, setNumCorrect] = useState<number>(0);
+  const [outcome, setOutcome] = useState<boolean[]>([]);
+  const [numCorrect, setNumCorrect] = useState<number[]>([]);
   const [curQuestion, setCurQuestion] = useState<number>(0);
 
+  // Setting up outcomes / numCorrect on initial load
+  useEffect(() => {
+    setOutcome(new Array(questions.length).fill(false));
+    setNumCorrect(new Array(questions.length).fill(0));
+  }, []);
+
   const setColors = () => {
-    if (numCorrect === 0) {
+    if (numCorrect[curQuestion] === 0) {
       return "none-correct";
     } else if (
-      numCorrect === questions[questionOrder[curQuestion]].answers.length
+      numCorrect[curQuestion] ===
+      questions[questionOrder[curQuestion]].answers.length
     ) {
       return "all-correct";
     } else {
@@ -40,10 +47,15 @@ function App() {
   };
 
   useEffect(() => {
-    if (numCorrect === questions[questionOrder[curQuestion]].answers.length) {
-      setOutcome(true);
-    } else {
-      setOutcome(false);
+    if (
+      numCorrect[curQuestion] ===
+      questions[questionOrder[curQuestion]].answers.length
+    ) {
+      setOutcome((prev) => {
+        // Set the specific item to true, return the whole array
+        prev[curQuestion] = true;
+        return prev;
+      });
     }
   }, [numCorrect, curQuestion]);
 
@@ -65,8 +77,6 @@ function App() {
         return prev + 1;
       }
     });
-    setOutcome(false);
-    setNumCorrect(0);
   }
 
   return (
@@ -84,6 +94,7 @@ function App() {
                 answerArr={answerArr}
                 setNumCorrect={setNumCorrect}
                 outcome={outcome}
+                curQuestion={curQuestion}
                 key={`pair-${index}`}
               />
             );
@@ -91,7 +102,7 @@ function App() {
         )}
       </div>
       <p className="text-xl m-4">
-        The answer is {outcome ? "correct" : " incorrect"}
+        The answer is {outcome[curQuestion] ? "correct" : " incorrect"}
       </p>
       <div id="next_prev_container" className="flex justify-center w-2xs">
         <button
