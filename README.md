@@ -1,4 +1,41 @@
-# Notes
+# Frontend Task
+
+This repository is my implementation of a technical test for an EdTech company.
+
+## Requirements
+
+### UI/UX requirements
+
+- [x] The solution should lock once all correct answers have been selected so the toggles can no longer be switched
+- [x] The toggles should animate between the two states (see attached video)
+- [x] The background colour should change in proportion to how "correct" the answer is (see video attached)
+- [x] The component should be responsive down to screens 320px wide
+
+### Project requirements
+
+- [ ] State any assumptions or limitations of your solution in the repository readme
+- [ ] Host your solution in a Git repo on Github or Gitlab & email us the link once you are done
+- [x] Please implement your solution in React + Typescript. You may choose any other tools and technologies as you see appropriate
+- [ ] The component should be reusable & extendable, it should be able to accommodate the question changing from that in the video to eg.:
+  > Q. "What are the ideal conditions inside an office?" A. (good pay, bad pay) (lot of meetings, less meetings), (free coffee, expensive coffee), (bear in office, dog in office).
+
+### What we are looking for
+
+- A high-quality bar and close attention to detail
+- This applies both to the UI/UX and to the quality of the code
+- The code should be readable and maintainable by teammates
+- The component should meet all the requirements listed above
+- Although this task is for a small, one-off component, try to imagine it as part of a wider application and codebase, and structure your code accordingly
+- You should be able to explain and back up any decisions made regarding your solution
+- Have fun with it, and don’t be afraid to learn something new! :)
+
+### Extension tasks
+
+- [ ] The order of the questions & answer positions should be randomised
+- [ ] Your solution should be able to accommodate answers with both two and three toggle positions in the answers. For example: Q. "Which are the best sports people & teams?" A. (Liverpool, Chelsea, Man Utd), (Serena Williams, Naomi Osaka)
+- [ ] You should make it easy to switch between the active question
+
+### Notes
 
 Data structure affects architecture, how I structure that defines where to check for true answers.
 
