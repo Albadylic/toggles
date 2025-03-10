@@ -47,8 +47,24 @@ function App() {
     }
   }, [numCorrect, curQuestion]);
 
+  function handlePreviousQuestion() {
+    setCurQuestion((prev) => {
+      if (prev === 0) {
+        return questions.length - 1;
+      } else {
+        return prev - 1;
+      }
+    });
+  }
+
   function handleNextQuestion() {
-    setCurQuestion((prev) => prev + 1);
+    setCurQuestion((prev) => {
+      if (prev === questions.length - 1) {
+        return 0;
+      } else {
+        return prev + 1;
+      }
+    });
     setOutcome(false);
     setNumCorrect(0);
   }
@@ -77,9 +93,22 @@ function App() {
       <p className="text-xl m-4">
         The answer is {outcome ? "correct" : " incorrect"}
       </p>
-      {outcome ? (
-        <button onClick={handleNextQuestion}>Next question</button>
-      ) : null}
+      <div id="next_prev_container" className="flex justify-between">
+        <button
+          onClick={handlePreviousQuestion}
+          // disabled={!outcome}
+          className="border rounded-full p-2 m-2 hover:selected-bg"
+        >
+          Previous
+        </button>
+        <button
+          onClick={handleNextQuestion}
+          // disabled={!outcome}
+          className="border rounded-full p-2 m-2"
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 }
