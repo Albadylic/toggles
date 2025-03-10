@@ -7,11 +7,17 @@ export default function AnswerSet({
   setNumCorrect,
   outcome,
 }) {
-  const randomIndex = Math.floor(Math.random() * answerArr.length);
-  const [selectedIndex, setSelectedIndex] = useState<number>(randomIndex);
+  // These states are used for positioning
   const [translationX, setTranslationX] = useState<string>("");
   const [translationY, setTranslationY] = useState<string>("");
-  const containerRef = useRef<HTMLDivElement | null>(null); // Reference to the container
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  // These states are for calculating the correct answers
+  const randomIndex = Math.floor(Math.random() * answerArr.length);
+  const [selectedIndex, setSelectedIndex] = useState<number>(randomIndex);
+  const [isCorrect, setIsCorrect] = useState<boolean>(
+    answerArr[randomIndex].correct
+  );
 
   useEffect(() => {
     function updateTranslation() {
@@ -61,39 +67,35 @@ export default function AnswerSet({
 
   // Counting correct answers
 
-  // const checkCorrect = (answerObj) => {
-  //   console.log("before", numCorrect);
-  //   if (answerObj.correct) {
-  //     setNumCorrect((prev: number) => prev + 1);
-  //   } else {
-  //     setNumCorrect((prev: number) => prev - 1);
-  //   }
-  //   console.log("after", numCorrect);
-  // };
+  useEffect(() => {
+    setNumCorrect((prev: number) => {
+      if (answerArr[randomIndex].correct) {
+        return prev + 1;
+      } else {
+        return prev;
+      }
+    });
+  }, [isCorrect, answerArr, randomIndex, setNumCorrect]);
 
-  // useEffect(() => {
-  //   setNumCorrect((prev: number) =>
-  //     answerArr[randomIndex].correct ? prev + 1 : prev - 1
-  //   );
-  // }, []);
+  console.log(numCorrect);
 
   function handleChange(answerObj, index) {
     // If all answers are correct, prevent further changes
     if (!outcome) {
-      // let currentCorrect = numCorrect;
-
       setSelectedIndex(index);
-
-      // // Check if the answer is selected already
-      // if (selectedIndex != index) {
-      //   // Check whether the new selected answer correct
-      //   // if (answerObj.correct) {
-      //   //   currentCorrect++;
-      //   // } else {
-      //   //   currentCorrect--;
-      //   // }
-      //   checkCorrect(answerObj);
-      // }
+      if (answerArr[selectedIndex].correct) {
+        setNumCorrect((prev: number) => {
+          return prev + 1;
+        });
+        setIsCorrect(true);
+      } else {
+        if (isCorrect) {
+          setNumCorrect((prev: number) => prev - 1);
+        } else {
+          setNumCorrect((prev: number) => prev);
+        }
+        setIsCorrect(false);
+      }
     }
   }
 
