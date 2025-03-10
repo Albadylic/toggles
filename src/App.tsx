@@ -78,6 +78,8 @@ function AnswerSet({
     return () => window.removeEventListener("resize", updateTranslation);
   }, [answerArr.length, selectedIndex]);
 
+  // The width & height can be set dynamically based on number of answers
+  // This is rendering inconsistently...
   const width = `w-1/${answerArr.length}`;
   const height = `h-1/${answerArr.length}`;
 
@@ -109,7 +111,7 @@ function AnswerSet({
     >
       <span
         id="overlay"
-        className={`border border-transparent sm:rounded-full ${height} rounded-lg sm:h-18 w-2xs sm:w-1/2 transition-transform duration-700 selected-bg absolute z-10`}
+        className={`border border-transparent sm:rounded-full h-1/2 rounded-lg sm:h-18 w-2xs sm:w-1/2 transition-transform duration-700 selected-bg absolute z-10`}
         style={{
           transform: `${translationX} ${translationY}`,
         }}
