@@ -2,6 +2,8 @@
 
 This repository is my implementation of a technical test for an EdTech company.
 
+**For notes on my approach and limitations see "Notes" section below.**
+
 ## Requirements
 
 ### UI/UX requirements
@@ -13,10 +15,10 @@ This repository is my implementation of a technical test for an EdTech company.
 
 ### Project requirements
 
-- [ ] State any assumptions or limitations of your solution in the repository readme
-- [ ] Host your solution in a Git repo on Github or Gitlab & email us the link once you are done
+- [x] State any assumptions or limitations of your solution in the repository readme
+- [x] Host your solution in a Git repo on Github or Gitlab & email us the link once you are done
 - [x] Please implement your solution in React + Typescript. You may choose any other tools and technologies as you see appropriate
-- [ ] The component should be reusable & extendable, it should be able to accommodate the question changing from that in the video to eg.:
+- [x] The component should be reusable & extendable, it should be able to accommodate the question changing from that in the video to eg.:
   > Q. "What are the ideal conditions inside an office?" A. (good pay, bad pay) (lot of meetings, less meetings), (free coffee, expensive coffee), (bear in office, dog in office).
 
 ### What we are looking for
@@ -33,75 +35,93 @@ This repository is my implementation of a technical test for an EdTech company.
 
 - [ ] The order of the questions & answer positions should be randomised
 - [ ] Your solution should be able to accommodate answers with both two and three toggle positions in the answers. For example: Q. "Which are the best sports people & teams?" A. (Liverpool, Chelsea, Man Utd), (Serena Williams, Naomi Osaka)
-- [ ] You should make it easy to switch between the active question
+- [x] You should make it easy to switch between the active question
 
-### Notes
+## Notes
 
-Data structure affects architecture, how I structure that defines where to check for true answers.
+### Known limitations
 
----
+**Changing questions**
 
-Bug - A user can continuously click one correct answer and increment the total counter. This means they don't need to get them all correct.
+Once the first question is complete, the user can click 'Next question...' to move to question 2. However, the counting of answers does not work beyond question 1.
 
-This could be fixed by disabling changes if an answer is already selected.
+I aimed to solve this using a `useEffect()` in the AnswerSet component to reset the `useRef()` - `initialCountCompleted` to false. My intention was that this would trigger a recalculation of how many answers are correct in the existing `useEffect()`. However, I found this would disrupt the calculation of the first questions correctness.
 
-Yeah, that fixed it, see the outer if here:
+In this case, I made the call to prioritise demonstrating one working question with randomised answers over resolving the issue. I could see a resolution which involved rearchitecting the entire component which I decided not to do.
 
-```ts
-// Check if the answer is selected already
-if (selectedIndex != index) {
-  // Check whether the new selected answer correct
-  if (answerObj.correct) {
-    currentCorrect++;
-  } else {
-    currentCorrect--;
-  }
-}
-```
+If I was to encounter this problem in a real-world situation, I'd seek guidance from another developer either by rubber ducking or explaining the issue to a more senior dev.
 
----
-
-Change to how I moved the slider, original:
+I have left my solution commented out in `<AnswerSet />`, and is as follows:
 
 ```ts
-let newIndex = selectedIndex + 1;
-let newIndex = selectedIndex + 1;
-
-if (newIndex > answerArr.length - 1) {
-  newIndex = 0;
-}
-
-setSelectedIndex(newIndex);
+// When the question changes, reset the count of correct
+useEffect(() => {
+  initialCountCompleted.current = false;
+  setSelectedIndex(Math.floor(Math.random() * answerArr.length));
+}, [curQuestion]);
 ```
 
-updated to:
+**Accommodation of >2 answers**
+
+While I have made some progress towards accommodating answer sets which contain more than two answers, my AnswerSet component is designed for two answers only.
+
+I found that the component rendered inconsistently where my responsive rule wasn't always picked up as a Tailwind Class. I prioritised the component rendering correctly for 2 answers over inconsistent responsive rendering. The rules that I'd calculated are below and would be passed inside a template literal class for the component.
 
 ```ts
-setSelectedIndex(index);
+const width = `w-1/${answerArr.length}`;
+const height = `h-1/${answerArr.length}`;
 ```
 
-The advantage is that the slider will move right to the chosen answer rather than sequentially from left to right. Scalable UI for >2 answers.
+**Randomisation of question & answer order**
 
----
+Chosen answer positions are randomised on page load. There is a small chance that all the correct answers will be selected on load which is a scenario I did not handle due to it being improbable.
 
-Building the slider:
+Questions and answers will render in the order they are defined in the dataset. If I was to randomise those, I'd do so using a shuffle function and then passing the data in shuffled order to the `<AnswerSet />` component.
 
-1. I drafted out an idea of the structure on tldraw
-1. I watched a couple videos on how other people had done similar things. Neither was exactly what I wanted but I was able to understand the principles they were using to then implement my own solution. [One was a light / dark toggle with no text inside. The other was a similar toggle with text tabs built in raw html,js and tailwind].
-1. The slider is an overlay which has position absolute and width is dynamically set based on how many answers there are. The same dynamic width is used on each answer element.
-1. I'm using a transform on an inline style to translateX based on a distance calculated referencing the container. -- I wonder if I could use a tailwind `translate-x-[${translationDist}px]` instead...
-1. I used useRef on the parent container to get its current width, within a useEffect which keeps the value up to date and responds to changes in the sizing of the window
+Randomising the question order would require tracking the number of completed questions in a state variable. Additionally, a button could be added to move back to a previous question. For this approach, storing the outcome (whether all answers are correct) for each question would be important.
 
----
+### Approach
 
-Todo:
+My first consideration was the architecture of the component and how to strucutre my data. I wanted to create reusable components wherever possible, such as for each set of answers.
 
-- Responsive design for 320px screens
-- Random question order, random answer order (math.random in the subcomponent)
-- Next question & dynamic rendering for any object
-- Dynamic colours for any length of answer set
-- Fix types
+Initially, I structured the data as two variables:
 
----
+1. question (a string)
+2. answers (an array of objects, each object has the answer text and a boolean indicating correctness)
 
-A thought: the structure of the data assumes that only one answer will be marked as correct. This would be need to be validated elsewhere or allows for multiple correct answers.
+In the final version, you'll see the `<AnswerSet />` as its own component and the question stored as a JSON object inside respective folders for components and data. While building, I had everything inside `<App />` for convenience of development.
+
+The final setup is advantageous as it gives a better sense of modularity for the subcomponent. Data can be altered without changing the `<App />` component which imitates calling an API or database object.
+
+**Whiteboarding**
+
+When I hit a stumbling block, I took a step back and mapped out my ideas on a (virtual) whiteboard. Here's a couple of screenshots showing my working through tricky parts.
+
+![Mapping of the behaviour of the app for randomised answers and how the UI will respond during answer selection](image.png)
+
+![Visualing the structure of components in the answer slider. Post-it notes next to the components show considerations about the build.](image-1.png)
+
+![Flowchart considering how to calculate the total number of correct answers with a randomised answer selection](image-2.png)
+
+**Handling the tricky parts**
+
+I found a few parts of the build particularly challenging, namely:
+
+1. Structuring the toggle component for a nice visual experience
+1. Randomising answer starting positions
+
+When faced with a tricky problem, my approach is generally something like this:
+
+1. Reread the code, looking out for any obvious errors
+1. Comment out parts which aren't working to get the simplest solution
+1. `Console.log()` variables, states and figure out what might be happening
+1. Look for tutorials, videos or articles explaining the topic
+1. Consult generative AI with my specific problem
+
+Coming unstuck is an important part of the process and carefully considering the code that I'm adding to my codebase helps me to get a good handle on the codebase as a whole.
+
+For example, I haven't used `useRef()` many times before. I implemented both in order to calculate the size of the toggle container and to verify if the initial correctness count had been completed. These two uses have helped me to build my understanding of how to fix values in React without causing unnecessary rerenders.
+
+**Iterations**
+
+I built this project iteratively, starting with the simplest solution I could come up with. As I built out more of the project, I was able to refactor parts of the codebase and streamline the final implementation.
