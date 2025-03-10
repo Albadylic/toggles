@@ -109,7 +109,7 @@ function AnswerSet({
     >
       <span
         id="overlay"
-        className={`border border-transparent sm:rounded-full ${height} rounded-lg sm:h-18 w-2xs sm:${width} transition-transform duration-700 selected-bg absolute z-10`}
+        className={`border border-transparent sm:rounded-full ${height} rounded-lg sm:h-18 w-2xs sm:w-1/2 transition-transform duration-700 selected-bg absolute z-10`}
         style={{
           transform: `${translationX} ${translationY}`,
         }}
@@ -120,7 +120,7 @@ function AnswerSet({
             <span
               onClick={() => handleChange(answerObj, index)}
               key={`obj-${index}`}
-              className={`sm:p-4 text-center ${width} cursor-pointer selected-text z-20`}
+              className={`sm:p-4 text-center w-1/2 cursor-pointer selected-text z-20`}
             >
               <p>{answerObj.text}</p>
             </span>
@@ -129,7 +129,7 @@ function AnswerSet({
           return (
             <span
               onClick={() => handleChange(answerObj, index)}
-              className={`sm:p-4 text-center ${width} cursor-pointer z-20`}
+              className={`sm:p-4 text-center w-1/2 cursor-pointer z-20`}
               key={`obj-${index}`}
             >
               <p>{answerObj.text}</p>
