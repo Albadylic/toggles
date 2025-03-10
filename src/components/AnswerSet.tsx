@@ -1,12 +1,25 @@
-import { useState, useEffect, useRef } from "react";
+import { FC, useState, useEffect, useRef } from "react";
 
-export default function AnswerSet({
+type answerArrType = answerObjType[];
+
+type answerObjType = {
+  text: string;
+  correct: boolean;
+};
+
+interface AnswerSetProps {
+  answerArr: answerArrType;
+  numCorrect: number;
+  setNumCorrect: React.Dispatch<React.SetStateAction<number>>;
+  outcome: boolean;
+}
+
+const AnswerSet: FC<AnswerSetProps> = ({
   answerArr,
-  curQuestion,
   numCorrect,
   setNumCorrect,
   outcome,
-}) {
+}) => {
   // These states are used for positioning
   const [translationX, setTranslationX] = useState<string>("");
   const [translationY, setTranslationY] = useState<string>("");
@@ -63,8 +76,8 @@ export default function AnswerSet({
 
   // The width & height can be set dynamically based on number of answers
   // This is rendering inconsistently...
-  const width = `w-1/${answerArr.length}`;
-  const height = `h-1/${answerArr.length}`;
+  //   const width = `w-1/${answerArr.length}`;
+  //   const height = `h-1/${answerArr.length}`;
 
   // When the question changes, reset the count of correct
   //   useEffect(() => {
@@ -82,7 +95,7 @@ export default function AnswerSet({
     }
   });
 
-  function handleChange(answerObj, index) {
+  function handleChange(answerObj: answerObjType, index: number) {
     // If all answers are correct, prevent further changes
     if (!outcome) {
       setSelectedIndex(index);
@@ -140,4 +153,6 @@ export default function AnswerSet({
       })}
     </div>
   );
-}
+};
+
+export default AnswerSet;

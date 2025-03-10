@@ -43,7 +43,6 @@ function App() {
           return (
             <AnswerSet
               answerArr={answerArr}
-              curQuestion={curQuestion}
               numCorrect={numCorrect}
               setNumCorrect={setNumCorrect}
               outcome={outcome}
