@@ -93,7 +93,7 @@ const AnswerSet: FC<AnswerSetProps> = ({
       });
       initialCountCompleted.current[curQuestion] = true;
     }
-  }, [curQuestion]);
+  }, [curQuestion, isCorrect, setNumCorrect]);
 
   function handleChange(answerObj: answerObjType, index: number) {
     // If all answers are correct, prevent further changes
@@ -103,16 +103,16 @@ const AnswerSet: FC<AnswerSetProps> = ({
       // If the states don't match, then the 'correctness' has changed from true -> false or vice versa
       // With two answers, this will always be true
       // With >2 then an answer might change but remain incorrect
-      //   if (answerObj.correct !== isCorrect) {
-      //     setNumCorrect((prev: number[]) => {
-      //       const newTotal = [...prev];
-      //       newTotal[curQuestion] = newTotal[curQuestion] += answerObj.correct
-      //         ? 1
-      //         : -1;
+      if (answerObj.correct !== isCorrect) {
+        setNumCorrect((prev: number[]) => {
+          const newTotal = [...prev];
+          newTotal[curQuestion] = newTotal[curQuestion] += answerObj.correct
+            ? 1
+            : -1;
 
-      //       return newTotal;
-      //     });
-      //   }
+          return newTotal;
+        });
+      }
 
       setIsCorrect(answerObj.correct);
     }

@@ -7,9 +7,10 @@ import AnswerSet from "./components/AnswerSet";
 // This is outside of the component so it remains static
 const createQuestionOrder = () => {
   // Store indexes
-  const orderArr = questions.map((item, index) => {
-    return index;
-  });
+  const orderArr = [];
+  for (let i = 0; i < questions.length; i++) {
+    orderArr.push(i);
+  }
 
   // Using Fisher-Yates Sorting Algorithm
   // Shuffle indexes to represent random order
