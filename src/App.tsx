@@ -93,18 +93,18 @@ function App() {
       <p className="text-xl m-4">
         The answer is {outcome ? "correct" : " incorrect"}
       </p>
-      <div id="next_prev_container" className="flex justify-between">
+      <div id="next_prev_container" className="flex justify-center w-2xs">
         <button
           onClick={handlePreviousQuestion}
           // disabled={!outcome}
-          className="border rounded-full p-2 m-2 hover:selected-bg"
+          className="border rounded-full p-2 m-2 w-1/2 cursor-pointer"
         >
           Previous
         </button>
         <button
           onClick={handleNextQuestion}
           // disabled={!outcome}
-          className="border rounded-full p-2 m-2"
+          className="border rounded-full p-2 m-2 w-1/2 cursor-pointer"
         >
           Next
         </button>
