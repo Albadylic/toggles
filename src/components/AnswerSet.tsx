@@ -9,14 +9,12 @@ type answerObjType = {
 
 interface AnswerSetProps {
   answerArr: answerArrType;
-  numCorrect: number;
   setNumCorrect: React.Dispatch<React.SetStateAction<number>>;
   outcome: boolean;
 }
 
 const AnswerSet: FC<AnswerSetProps> = ({
   answerArr,
-  numCorrect,
   setNumCorrect,
   outcome,
 }) => {
@@ -112,9 +110,6 @@ const AnswerSet: FC<AnswerSetProps> = ({
       setIsCorrect(answerObj.correct);
     }
   }
-  useEffect(() => {
-    console.log(numCorrect);
-  }, [numCorrect]);
 
   return (
     <div

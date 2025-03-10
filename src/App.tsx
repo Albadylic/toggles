@@ -43,7 +43,6 @@ function App() {
           return (
             <AnswerSet
               answerArr={answerArr}
-              numCorrect={numCorrect}
               setNumCorrect={setNumCorrect}
               outcome={outcome}
               key={`pair-${index}`}
