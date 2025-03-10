@@ -9,14 +9,16 @@ type answerObjType = {
 
 interface AnswerSetProps {
   answerArr: answerArrType;
-  setNumCorrect: React.Dispatch<React.SetStateAction<number>>;
-  outcome: boolean;
+  setNumCorrect: React.Dispatch<React.SetStateAction<number[]>>;
+  outcome: boolean[];
+  curQuestion: number;
 }
 
 const AnswerSet: FC<AnswerSetProps> = ({
   answerArr,
   setNumCorrect,
   outcome,
+  curQuestion,
 }) => {
   // These states are used for positioning
   const [translationX, setTranslationX] = useState<string>("");
@@ -29,7 +31,7 @@ const AnswerSet: FC<AnswerSetProps> = ({
   const [isCorrect, setIsCorrect] = useState<boolean>(
     answerArr[randomIndex].correct
   );
-  const initialCountCompleted = useRef(false);
+  const initialCountCompleted = useRef<boolean[]>([false, false, false]);
 
   useEffect(() => {
     function updateTranslation() {
@@ -77,34 +79,39 @@ const AnswerSet: FC<AnswerSetProps> = ({
   //   const width = `w-1/${answerArr.length}`;
   //   const height = `h-1/${answerArr.length}`;
 
-  // When the question changes, reset the count of correct
-  //   useEffect(() => {
-  //     initialCountCompleted.current = false;
-  //     setSelectedIndex(Math.floor(Math.random() * answerArr.length));
-  //   }, [curQuestion]);
-
   // Run initial count
   useEffect(() => {
-    if (!initialCountCompleted.current) {
+    if (!initialCountCompleted.current[curQuestion]) {
       // If the answer has been randomised as true, then add one to the previous count
       // Otherwise, it remains as before
-      setNumCorrect((prev: number) => prev + (isCorrect ? 1 : 0));
-      initialCountCompleted.current = true;
+      setNumCorrect((prev: number[]) => {
+        // Previous will be a number in an array
+        // The index is curQuestion
+        const newTotal = [...prev];
+        newTotal[curQuestion] = newTotal[curQuestion] += isCorrect ? 1 : 0;
+        return newTotal;
+      });
+      initialCountCompleted.current[curQuestion] = true;
     }
-  });
+  }, [curQuestion, isCorrect, setNumCorrect]);
 
   function handleChange(answerObj: answerObjType, index: number) {
     // If all answers are correct, prevent further changes
-    if (!outcome) {
+    if (!outcome[curQuestion]) {
       setSelectedIndex(index);
 
       // If the states don't match, then the 'correctness' has changed from true -> false or vice versa
       // With two answers, this will always be true
       // With >2 then an answer might change but remain incorrect
       if (answerObj.correct !== isCorrect) {
-        setNumCorrect((prev: number) =>
-          answerObj.correct ? prev + 1 : prev - 1
-        );
+        setNumCorrect((prev: number[]) => {
+          const newTotal = [...prev];
+          newTotal[curQuestion] = newTotal[curQuestion] += answerObj.correct
+            ? 1
+            : -1;
+
+          return newTotal;
+        });
       }
 
       setIsCorrect(answerObj.correct);
