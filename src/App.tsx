@@ -6,12 +6,13 @@ import AnswerSet from "./components/AnswerSet";
 // Generating a random order of indexes for questions
 // This is outside of the component so it remains static
 const createQuestionOrder = () => {
-  // Generate a random set of indexes representing order
+  // Store indexes
   const orderArr = questions.map((item, index) => {
     return index;
   });
 
   // Using Fisher-Yates Sorting Algorithm
+  // Shuffle indexes to represent random order
   for (let i = orderArr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [orderArr[i], orderArr[j]] = [orderArr[j], orderArr[i]]; // Swap elements
